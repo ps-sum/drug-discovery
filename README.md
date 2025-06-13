@@ -2,8 +2,6 @@
 
 This project is an AI-powered system to predict drug-target interactions using SMILES strings and protein sequences. It utilizes a machine learning model trained on known interaction data to return a predicted KIBA score, indicating the strength of molecular binding. The frontend is a modern web interface connected to a Flask API backend.
 
-Live demo: https://drug-discovery-2t0j.onrender.com/
-
 ---
 
 ## Key Features
