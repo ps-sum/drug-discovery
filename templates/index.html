@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Drug-Target Interaction Predictor</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- SMILES Drawer -->
+  <script src="https://unpkg.com/smiles-drawer@2.0.1/dist/smiles-drawer.min.js"></script>
+
+  <!-- Tailwind Config -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            sand: '#FEFAF1',
+            primaryLight: '#E5B8F4',
+            primary: '#C147E9',
+            primaryDark: '#810CA8',
+            accent: '#2D033B',
+            slate: {
+              800: '#333333',
+              600: '#444444',
+              400: '#777777',
+            },
+          },
+          boxShadow: {
+            glass: '0 8px 32px 0 rgba(31, 38, 135, 0.37)',
+          },
+          backdropBlur: {
+            sm: '4px',
+          }
+        },
+      },
+    };
+  </script>
+
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #C147E9, #FEFAF1, #2D033B);
+      background-attachment: fixed;
+      background-size: cover;
+      background-repeat: no-repeat;
+    }
+    footer{
+      background-color: white;
+    }
+
+    canvas {
+      background-color: white;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body class="text-slate-800 font-sans">
+
+  <!-- ✅ Navigation Bar -->
+  <nav class="fixed w-full top-0 left-0 bg-white/80 backdrop-blur-sm shadow z-50">
+    <div class="max-w-7xl mx-auto flex items-center justify-between px-6 py-3">
+      <img src="{{ url_for('static', filename='fin.png') }}" alt="Logo" class="h-10" />
+      <div class="flex space-x-8 text-sm font-semibold text-slate-700">
+        <a href="{{ url_for('mine') }}" class="hover:text-primary">Home</a>
+        <a href="{{ url_for('index') }}" class="hover:text-primary">Predict</a>
+        <a href="{{ url_for('system') }}" class="hover:text-primary">Learn More</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 🔬 Predictor Form Container -->
+  <main class="pt-32 pb-16 max-w-2xl mx-auto px-6">
+    <div class="bg-white/20 backdrop-blur-sm p-8 rounded-2xl shadow-glass border border-white/30 text-accent">
+      <h2 class="text-2xl font-bold text-primary mb-6 text-center">🔬 AI Drug-Target Interaction Predictor</h2>
+
+      <label for="disease" class="font-medium">Select Disease:</label>
+      <select id="disease" onchange="loadProteins()" class="mb-4 bg-white/40 text-accent rounded-md p-2 w-full">
+        <option disabled selected value>-- Choose a disease --</option>
+      </select>
+
+      <label for="proteinSelect" class="font-medium">Select Protein:</label>
+      <select id="proteinSelect" onchange="fillSequence()" class="mb-4 bg-white/40 text-accent rounded-md p-2 w-full"></select>
+
+      <label for="smiles" class="font-medium">Enter Drug SMILES:</label>
+      <input type="text" id="smiles" placeholder="e.g., CC1=CC=CC=C1" class="mb-4 bg-white/40 rounded-md p-2 w-full" />
+
+      <label for="sequence" class="font-medium">Enter Protein Sequence:</label>
+      <textarea id="sequence" placeholder="e.g., MTEITAAMVKELRESTGAGMMDCKNALSETQ..." rows="5" class="mb-6 bg-white/40 rounded-md p-2 w-full"></textarea>
+
+      <button onclick="predict()" class="w-full bg-gradient-to-r from-primary to-primaryLight text-white font-bold py-2 rounded-lg hover:from-primaryLight hover:to-primary transition-all">
+        Predict
+      </button>
+
+      <canvas id="structure-canvas" width="400" height="300" class="mx-auto"></canvas>
+      <h3 id="result" class="text-center mt-6 font-semibold text-lg"></h3>
+    </div>
+  </main>
+
+  <!-- 🧠 JS Logic -->
+  <script>
+    const BASE_URL = "";
+
+    async function loadDiseases() {
+      try {
+        const res = await fetch(`${BASE_URL}/all-diseases`);
+        const data = await res.json();
+        const select = document.getElementById("disease");
+        data.diseases.forEach(d => {
+          const opt = document.createElement("option");
+          opt.value = d;
+          opt.text = d;
+          select.appendChild(opt);
+        });
+      } catch (err) {
+        console.error("Failed to load diseases:", err);
+      }
+    }
+
+    async function loadProteins() {
+      const disease = document.getElementById("disease").value;
+      const res = await fetch(`${BASE_URL}/proteins-for-disease?disease=${encodeURIComponent(disease)}`);
+      const data = await res.json();
+      const select = document.getElementById("proteinSelect");
+      select.innerHTML = "";
+      data.proteins.forEach(p => {
+        const opt = document.createElement("option");
+        opt.value = p;
+        opt.text = p;
+        select.appendChild(opt);
+      });
+      if (data.proteins.length > 0) {
+        document.getElementById("sequence").value = data.proteins[0];
+      }
+    }
+
+    function fillSequence() {
+      const protein = document.getElementById("proteinSelect").value;
+      document.getElementById("sequence").value = protein;
+    }
+
+    async function predict() {
+      const smiles = document.getElementById("smiles").value;
+      const sequence = document.getElementById("sequence").value;
+      const result = document.getElementById("result");
+      result.innerText = "Predicting...";
+      drawSmiles(smiles);
+
+      try {
+        const res = await fetch(`${BASE_URL}/predict`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ smiles, sequence })
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+          const kiba = data.kiba_score;
+          let interpretation = "";
+          let cssClass = "";
+
+          if (kiba > 12) {
+            interpretation = "🟢 Strong binding predicted.";
+            cssClass = "text-green-600";
+          } else if (kiba >= 8) {
+            interpretation = "🟡 Moderate binding predicted.";
+            cssClass = "text-yellow-500";
+          } else {
+            interpretation = "🔴 Weak binding predicted.";
+            cssClass = "text-red-500";
+          }
+
+          result.innerHTML = `<span class="${cssClass}">Predicted KIBA Score: ${kiba.toFixed(4)}<br>${interpretation}</span>`;
+        } else {
+          result.innerText = "Error: " + data.error;
+        }
+      } catch (err) {
+        result.innerText = "Connection error. Make sure the backend is running.";
+      }
+    }
+
+    function drawSmiles(smiles) {
+      const canvas = document.getElementById("structure-canvas");
+      const drawer = new SmilesDrawer.Drawer({ width: 400, height: 300 });
+      SmilesDrawer.parse(smiles, function (tree) {
+        drawer.draw(tree, canvas, "light");
+      }, function (err) {
+        console.error("Failed to parse SMILES:", err);
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.font = "16px Arial";
+        ctx.fillText("Invalid SMILES", 130, 150);
+      });
+    }
+
+    window.onload = loadDiseases;
+  </script>
+  <!-- 📊 KIBA Score Interpretation Table -->
+<section class="max-w-xl mx-auto mb-16 px-6">
+  <h2 class="text-center text-xl font-bold text-primary mb-4">KIBA Score Meaning</h2>
+  <table class="w-full bg-white/30 text-center rounded-lg overflow-hidden shadow-glass">
+    <thead class="bg-primary text-white">
+      <tr>
+        <th class="py-2 px-4">Score Range</th>
+        <th class="py-2 px-4">Interpretation</th>
+      </tr>
+    </thead>
+    <tbody class="text-slate-800 font-medium">
+      <tr class="border-t border-white/20">
+        <td class="py-2 px-4">KIBA &gt; 12</td>
+        <td class="py-2 px-4">Weak Binding</td>
+      </tr>
+      <tr class="border-t border-white/20">
+        <td class="py-2 px-4">8 ≤ KIBA ≤ 12</td>
+        <td class="py-2 px-4">Moderate Binding</td>
+      </tr>
+      <tr class="border-t border-white/20">
+        <td class="py-2 px-4">KIBA &lt; 8</td>
+        <td class="py-2 px-4">Strong Binding</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+</body>
+<footer class="text-center text-sm text-slate-500 py-10 border-t border-slate-200">
+      © 2025 Accelerate Discovery, Inc
+    </footer>
+</html>

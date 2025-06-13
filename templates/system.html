@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>System Explanation - AI Drug-Target Predictor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: { sans: ['Inter', 'sans-serif'] },
+            colors: {
+              sand: '#FEFAF1',
+              primaryLight: '#E5B8F4',
+              primary: '#C147E9',
+              primaryDark: '#810CA8',
+              accent: '#2D033B',
+              slate: {
+                800: '#333333',
+                600: '#444444',
+                400: '#777777',
+              },
+            },
+            boxShadow: {
+              glass: '0 8px 32px 0 rgba( 31, 38, 135, 0.37 )',
+            },
+            backdropBlur: {
+              sm: '4px',
+            }
+          },
+        },
+      };
+    </script>
+    <style>
+      html {
+        scroll-behavior: smooth;
+      }
+    </style>
+  </head>
+  <body class="font-sans bg-gradient-to-br from-sand to-white text-slate-800">
+    <!-- Banner -->
+    <nav class="fixed w-full top-0 z-50 bg-white/80 backdrop-blur-sm shadow">
+   <div class="max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
+    <!-- Left: Logo -->
+    <img src="{{ url_for('static', filename='fin.png') }}" alt="Logo" class="h-10" />
+
+    <!-- Right: Links -->
+    <div class="space-x-6 text-sm font-semibold text-slate-700">
+      <a href="{{ url_for('mine') }}" class="hover:text-primary">Home</a>
+      <a href="{{ url_for('index') }}" class="hover:text-primary">Predict</a>
+      <a href="{{ url_for('system') }}" class="hover:text-primary">Learn More</a>
+    </div>
+  </div>
+</nav>
+
+
+    <header class="text-center pt-40 pb-16 bg-gradient-to-br from-primaryLight to-primary text-white">
+      <h1 class="text-5xl font-extrabold mb-4">How The System Works</h1>
+      <p class="text-xl">Machine Learning-Based Drug-Target Binding Affinity Prediction</p>
+    </header>
+
+    <!-- Section Template -->
+    <section class="max-w-5xl mx-auto py-20 px-6">
+      <h2 class="text-3xl font-bold text-primary mb-6 text-center">🧠 Introduction</h2>
+      <p class="text-lg text-slate-600 text-center">
+        Our application leverages the power of machine learning to predict binding affinity between drug compounds and target proteins. It allows researchers to input chemical SMILES strings and protein sequences, and provides predictions based on biological knowledge and advanced ML models.
+      </p>
+    </section>
+
+    <section class="max-w-5xl mx-auto py-20 px-6">
+      <h2 class="text-3xl font-bold text-primary mb-6 text-center">⚙️ Complete Workflow</h2>
+      <div class="bg-white/50 backdrop-blur-sm rounded-2xl p-10 shadow-glass text-slate-700">
+        <ul class="list-disc list-inside space-y-4">
+          <li><b>Input:</b> User provides <strong>SMILES</strong> strings and <strong>Protein Sequences</strong>.</li>
+          <li><b>Disease Filtering:</b> Uses <strong>DisGeNET</strong> for selecting relevant disease-protein associations.</li>
+          <li><b>Feature Extraction:</b>
+            <ul class="list-disc list-inside ml-6">
+              <li>SMILES ➔ Molecular fingerprints (bit vectors)</li>
+              <li>Protein ➔ K-mer vectorization (sequence encoding)</li>
+            </ul>
+          </li>
+          <li><b>Prediction Model:</b> Random Forest classifier processes combined features.</li>
+          <li><b>Output:</b> Predicted KIBA Score ➔ Binding Strength (Strong / Moderate / Weak)</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="max-w-5xl mx-auto py-20 px-6">
+      <h2 class="text-3xl font-bold text-primary mb-6 text-center">💡 Why Random Forest?</h2>
+      <div class="bg-white/50 backdrop-blur-sm rounded-2xl p-10 shadow-glass text-slate-700">
+        <ul class="list-disc list-inside space-y-4">
+          <li>Handles mixed feature types effectively.</li>
+          <li>Robust to noise and overfitting.</li>
+          <li>Provides interpretable feature importance scores.</li>
+          <li>Performs well on small to medium sized biomedical datasets.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="max-w-5xl mx-auto py-20 px-6">
+      <h2 class="text-3xl font-bold text-primary mb-6 text-center">📊 Key Data Sources</h2>
+      <div class="bg-white/50 backdrop-blur-sm rounded-2xl p-10 shadow-glass text-slate-700">
+        <ul class="list-disc list-inside space-y-4">
+          <li><strong>DisGeNET:</strong> Disease-Protein Associations</li>
+          <li><strong>DrugBank:</strong> Chemical SMILES data</li>
+          <li><strong>UniProt:</strong> Protein sequence repository</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="max-w-5xl mx-auto py-20 px-6 text-center">
+      <h2 class="text-3xl font-bold text-primary mb-6">🚀 The Goal</h2>
+      <p class="text-lg text-slate-600 max-w-3xl mx-auto">
+        Our goal is to empower drug discovery pipelines by offering quick, efficient, and interpretable predictions of potential drug-target interactions, accelerating early-stage research and reducing experimental costs.
+      </p>
+    </section>
+
+    <footer class="text-center text-sm text-slate-500 py-10 border-t border-slate-200">
+      © 2025 Accelerate Discovery, Inc
+    </footer>
+  </body>
+</html>

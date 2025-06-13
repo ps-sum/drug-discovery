@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Accelerate Discovery</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- AOS Animate on Scroll -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            sand: '#FEFAF1',
+            primaryLight: '#E5B8F4',
+            primary: '#C147E9',
+            primaryDark: '#810CA8',
+            accent: '#2D033B',
+            slate: {
+              800: '#333333',
+              600: '#444444',
+              400: '#777777',
+            },
+          },
+          boxShadow: {
+            glass: '0 8px 32px 0 rgba( 31, 38, 135, 0.37 )',
+          },
+          backdropBlur: {
+            sm: '4px',
+          }
+        },
+      },
+    };
+  </script>
+
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      background: linear-gradient(135deg, #FEFAF1, #fff);
+    }
+  </style>
+</head>
+<body class="text-slate-800 font-sans bg-sand">
+
+  <!-- Fancy Navbar -->
+  <nav class="fixed w-full top-0 left-0 z-50 bg-white/80 backdrop-blur-sm shadow-md">
+    <div class="max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
+      <img src="{{ url_for('static', filename='fin.png') }}" alt="Logo" class="h-10" />
+      <div class="flex gap-8 text-sm font-semibold text-slate-700">
+        <a href="{{ url_for('mine') }}" class="hover:text-primary transition">Home</a>
+        <a href="{{ url_for('index') }}" class="hover:text-primary transition">Predict</a>
+        <a href="{{ url_for('system') }}" class="hover:text-primary transition">Learn More</a>
+      </div>
+    </div>
+  </nav>
+
+ <!-- Hero Section with Swirls -->
+<section class="relative overflow-hidden text-center py-40 px-6 bg-gradient-to-br from-primaryLight to-primary text-white">
+  <!-- Swirl Effects -->
+  <div class="absolute w-[600px] h-[600px] bg-white opacity-20 rounded-full blur-3xl top-[-200px] left-[-200px]"></div>
+  <div class="absolute w-[500px] h-[500px] bg-primaryDark opacity-25 rounded-full blur-3xl bottom-[-150px] right-[-150px]"></div>
+  <div class="absolute w-[400px] h-[400px] bg-primary opacity-30 rounded-full blur-2xl top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
+
+  <!-- Hero Text -->
+  <h1 class="text-5xl md:text-6xl font-extrabold mb-6 relative z-10" data-aos="fade-down">Accelerate Discovery</h1>
+  <p class="text-lg md:text-xl max-w-2xl mx-auto mb-8 relative z-10" data-aos="fade-up">
+    Next-gen drug discovery powered by AI and precision.
+  </p>
+  <a href="{{ url_for('index') }}">
+    <button class="bg-white text-primary font-semibold px-10 py-4 rounded-full shadow-lg hover:bg-primary hover:text-white transition-all duration-300 relative z-10" data-aos="zoom-in">
+      Get Started
+    </button>
+  </a>
+</section>
+
+
+  <!-- Feature Badges -->
+  <div class="flex flex-wrap justify-center gap-4 mt-20 mb-20 text-sm px-4" data-aos="fade-up">
+    <span class="bg-primary text-white px-5 py-3 rounded-full shadow">Wellness Support</span>
+    <span class="bg-primary text-white px-5 py-3 rounded-full shadow">DNA Testing</span>
+    <span class="bg-primary text-white px-5 py-3 rounded-full shadow">AI Powered</span>
+    <span class="bg-primary text-white px-5 py-3 rounded-full shadow">Smooth UI</span>
+    <span class="bg-primary text-white px-5 py-3 rounded-full shadow">Secure</span>
+  </div>
+
+  <!-- Feature Cards -->
+  <section class="grid gap-24 px-6 max-w-6xl mx-auto mb-32">
+    <div class="flex flex-col md:flex-row justify-between items-center bg-white/50 backdrop-blur-sm shadow-glass rounded-3xl p-10" data-aos="fade-right">
+      <div class="w-full md:w-1/2 flex justify-center">
+        <img src="{{ url_for('static', filename='img.png') }}" alt="Drug Image" class="h-60 object-contain rounded-2xl" />
+      </div>
+      <div class="w-full md:w-1/2 mt-6 md:mt-0 md:pl-12 text-center md:text-left">
+        <h3 class="text-3xl font-semibold text-primary mb-3">Drug Candidate Screening</h3>
+        <p class="text-slate-600 text-lg leading-relaxed">Predict molecules and binding strength using AI-driven models.</p>
+      </div>
+    </div>
+
+    <div class="flex flex-col md:flex-row-reverse justify-between items-center bg-white/50 backdrop-blur-sm shadow-glass rounded-3xl p-10" data-aos="fade-left">
+      <div class="w-full md:w-1/2 flex justify-center">
+        <img src="{{ url_for('static', filename='dna.png') }}" alt="DNA Image" class="h-60 object-contain rounded-2xl" />
+      </div>
+      <div class="w-full md:w-1/2 mt-6 md:mt-0 md:pr-12 text-center md:text-right">
+        <h3 class="text-3xl font-semibold text-primary mb-3">Target Identification</h3>
+        <p class="text-slate-600 text-lg leading-relaxed">Find protein targets with curated biological databases and AI.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Call to Action -->
+  <section class="text-center py-24 bg-primary text-white rounded-t-3xl" data-aos="zoom-in-up">
+    <h2 class="text-4xl font-bold mb-6">Ready to accelerate discovery?</h2>
+    <button class="bg-primaryLight text-slate-800 font-semibold px-10 py-4 rounded-full shadow-lg hover:bg-white hover:text-primary transition-all duration-300">
+      Contact Us
+    </button>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-white text-slate-600 py-8 text-center text-sm">
+    <div class="flex justify-center gap-8 mb-3 font-semibold">
+      <a href="#" class="hover:text-primary">Terms</a>
+      <a href="#" class="hover:text-primary">Privacy</a>
+      <a href="#" class="hover:text-primary">Security</a>
+    </div>
+    <p>&copy; 2025 Accelerate Discovery, Inc.</p>
+  </footer>
+
+  <!-- AOS Init -->
+  <script>
+    AOS.init();
+  </script>
+</body>
+</html>
