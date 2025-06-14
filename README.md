@@ -26,7 +26,7 @@ This project is an AI-powered system to predict drug-target interactions using S
 - RDKit for chemical structure handling
 
 **Frontend**
-- Vanilla HTML, CSS, JavaScript
+- HTML, Tailwind CSS, JavaScript
 - SMILES Drawer for structure rendering
 - Fetch API for async interaction
 
